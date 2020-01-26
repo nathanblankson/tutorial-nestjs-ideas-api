@@ -11,11 +11,11 @@ import {
   UseGuards,
 } from '@nestjs/common';
 
+import { User } from '../user/user.decorator';
+import { ValidationPipe } from '../shared/validation.pipe';
+import { AuthGuard } from '../shared/auth.guard';
 import { IdeaService } from './idea.service';
 import { IdeaDTO } from './idea.dto';
-import { ValidationPipe } from '../shared/validation.pipe';
-import { AuthGuard } from 'src/shared/auth.guard';
-import { User } from 'src/user/user.decorator';
 
 @Controller('api/ideas')
 export class IdeaController {

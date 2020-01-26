@@ -1,12 +1,11 @@
-import { Injectable, HttpException, HttpStatus, Inject } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
+import { Votes } from '../shared/votes.enum';
+import { UserEntity } from '../user/user.entity';
 import { IdeaEntity } from './idea.entity';
 import { IdeaDTO, IdeaRO } from './idea.dto';
-import { UserEntity } from 'src/user/user.entity';
-import { Votes } from 'src/shared/votes.enum';
-import { ValidationError } from 'class-validator';
 
 @Injectable()
 export class IdeaService {
@@ -74,7 +73,7 @@ export class IdeaService {
 
   async showAll(): Promise<IdeaRO[]> {
     const ideas = await this.ideaRepository.find({
-      relations: ['author', 'upvotes', 'downvotes'],
+      relations: ['author', 'upvotes', 'downvotes', 'comments'],
     });
     return ideas.map(idea => this.toResponseObject(idea));
   }
@@ -89,7 +88,7 @@ export class IdeaService {
   async read(id: string): Promise<IdeaRO> {
     const idea = await this.ideaRepository.findOne({
       where: { id },
-      relations: ['author', 'upvotes', 'downvotes'],
+      relations: ['author', 'upvotes', 'downvotes', 'comments'],
     });
     if (!idea) {
       throw new HttpException('Not found', HttpStatus.NOT_FOUND);
@@ -113,7 +112,7 @@ export class IdeaService {
     await this.ideaRepository.update({ id }, data);
     idea = await this.ideaRepository.findOne({
       where: { id },
-      relations: ['author'],
+      relations: ['author', 'comments'],
     });
     return this.toResponseObject(idea);
   }
@@ -121,7 +120,7 @@ export class IdeaService {
   async destroy(id: string, userId: string) {
     const idea = await this.ideaRepository.findOne({
       where: { id },
-      relations: ['author'],
+      relations: ['author', 'comments'],
     });
     if (!idea) {
       throw new HttpException('Not found', HttpStatus.NOT_FOUND);
@@ -134,7 +133,7 @@ export class IdeaService {
   async upvote(id: string, userId: string) {
     let idea = await this.ideaRepository.findOne({
       where: { id },
-      relations: ['author', 'upvotes', 'downvotes'],
+      relations: ['author', 'upvotes', 'downvotes', 'comments'],
     });
     const user = await this.userRepository.findOne({
       where: { id: userId },
@@ -147,7 +146,7 @@ export class IdeaService {
   async downvote(id: string, userId: string) {
     let idea = await this.ideaRepository.findOne({
       where: { id },
-      relations: ['author', 'upvotes', 'downvotes'],
+      relations: ['author', 'upvotes', 'downvotes', 'comments'],
     });
     const user = await this.userRepository.findOne({
       where: { id: userId },
