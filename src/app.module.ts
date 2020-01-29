@@ -1,6 +1,7 @@
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { GraphQLModule } from '@nestjs/graphql';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -11,7 +12,15 @@ import { LoggingInterceptor } from './shared/logging.interceptor';
 import { CommentModule } from './comment/comment.module';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(), IdeaModule, UserModule, CommentModule],
+  imports: [
+    TypeOrmModule.forRoot(),
+    IdeaModule,
+    UserModule,
+    CommentModule,
+    GraphQLModule.forRoot({
+      typePaths: ['./**/*graphql'],
+    }),
+  ],
   controllers: [AppController],
   providers: [
     AppService,

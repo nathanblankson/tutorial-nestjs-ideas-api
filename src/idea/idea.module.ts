@@ -7,9 +7,12 @@ import { UserEntity } from '../user/user.entity';
 import { IdeaEntity } from './idea.entity';
 import { IdeaController } from './idea.controller';
 import { IdeaService } from './idea.service';
+import { IdeaResolver } from './idea.resolver';
+import { CommentEntity } from '../comment/comment.entity';
+import { CommentService } from '../comment/comment.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([IdeaEntity, UserEntity])],
+  imports: [TypeOrmModule.forFeature([IdeaEntity, UserEntity, CommentEntity])],
   controllers: [IdeaController],
   providers: [
     IdeaService,
@@ -17,6 +20,8 @@ import { IdeaService } from './idea.service';
       provide: APP_PIPE,
       useClass: ValidationPipe,
     },
+    IdeaResolver,
+    CommentService,
   ],
 })
 export class IdeaModule {}
