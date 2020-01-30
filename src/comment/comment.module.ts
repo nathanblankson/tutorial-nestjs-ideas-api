@@ -7,6 +7,7 @@ import { UserEntity } from '../user/user.entity';
 import { CommentEntity } from './comment.entity';
 import { CommentController } from './comment.controller';
 import { CommentService } from './comment.service';
+import { CommentResolver } from './comment.resolver';
 
 @Module({
   imports: [TypeOrmModule.forFeature([IdeaEntity, UserEntity, CommentEntity])],
@@ -17,6 +18,7 @@ import { CommentService } from './comment.service';
       provide: APP_PIPE,
       useClass: ValidationPipe,
     },
+    CommentResolver,
   ],
 })
 export class CommentModule {}
