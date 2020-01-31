@@ -10,26 +10,26 @@ export class CommentResolver {
   constructor(private readonly commentService: CommentService) {}
 
   @Query()
-  comment(@Args('id') id: string) {
-    return this.commentService.show(id);
+  async comment(@Args('id') id: string) {
+    return await this.commentService.show(id);
   }
 
   @Mutation()
   @UseGuards(AuthGuard)
-  createComment(
+  async createComment(
     @Args('idea') ideaId: string,
     @Args('comment') comment: string,
     @Context('user') user,
   ) {
     const data: CommentDTO = { comment };
     const { id: userId } = user;
-    return this.commentService.create(ideaId, userId, data);
+    return await this.commentService.create(ideaId, userId, data);
   }
 
   @Mutation()
   @UseGuards(AuthGuard)
-  deleteComment(@Args('id') id: string, @Context('user') user) {
+  async deleteComment(@Args('id') id: string, @Context('user') user) {
     const { id: userId } = user;
-    return this.commentService.destroy(id, userId);
+    return await this.commentService.destroy(id, userId);
   }
 }
